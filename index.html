@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tadoku Toshokan - Japanese Reading Collection</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Tadoku Toshokan</h1>
+        <p>日本語の読み物コレクション</p>
+    </header>
+    
+    <nav>
+        <div class="level-selector">
+            <a href="#" class="level-btn active" data-level="all">All</a>
+            <a href="#" class="level-btn" data-level="1">Level 1</a>
+            <a href="#" class="level-btn" data-level="2">Level 2</a>
+            <a href="#" class="level-btn" data-level="3">Level 3</a>
+            <a href="#" class="level-btn" data-level="4">Level 4</a>
+        </div>
+    </nav>
+
+    <main>
+        <div id="story-list"></div>
+    </main>
+
+    <footer>
+        <p>Stories collected from <a href="https://tadoku.org/japanese/en/free-books-en/">Tadoku.org</a> and other sources</p>
+    </footer>
+    
+    <script src="js/stories-data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

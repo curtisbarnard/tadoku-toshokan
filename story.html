@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story - Tadoku Toshokan</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Tadoku Toshokan</h1>
+        <p>日本語の読み物コレクション</p>
+    </header>
+    
+    <nav>
+        <div class="level-selector">
+            <a href="index.html" class="level-btn">← Back to Stories</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="story-container">
+            <div class="story-header">
+                <h1 id="story-title">Loading story...</h1>
+                <p id="story-author" class="story-author"></p>
+            </div>
+            
+            <div id="story-content" class="story-content">
+                <div class="loading">Loading story...</div>
+            </div>
+            
+            <div class="story-navigation">
+                <a href="index.html">← Back to Stories</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Stories collected from <a href="https://tadoku.org/japanese/en/free-books-en/">Tadoku.org</a> and other sources</p>
+    </footer>
+    
+    <script src="js/stories-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storyId = urlParams.get('id');
+            
+            if (!storyId) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Get the story data
+            const story = STORIES_BY_ID[storyId];
+            
+            if (!story) {
+                document.getElementById('story-content').innerHTML = '<div class="error-message"><h1>Story not found</h1><p>The requested story could not be found.</p><a href="index.html">Back to Home</a></div>';
+                return;
+            }
+            
+            // Set the page title
+            document.title = `${story.title} - Tadoku Toshokan`;
+            
+            // Update the story header information
+            document.getElementById('story-title').textContent = story.title;
+            document.getElementById('story-author').textContent = story.author + (story.authorEn ? ` (${story.authorEn})` : '');
+            
+            // Load the story content
+            loadStoryContent(story);
+        });
+        
+        // Function to load story content
+        function loadStoryContent(story) {
+            const storyContentElement = document.getElementById('story-content');
+            
+            if (!storyContentElement) {
+                console.error('Story content element not found');
+                return;
+            }
+            
+            // Clear previous content
+            storyContentElement.innerHTML = '';
+            
+            // Load story markdown and convert to HTML
+            fetch(`${story.folderPath}/${story.id}.md`)
+                .then(response => {
+                    if (!response.ok) {
+                        // If the file doesn't exist with the ID name, try the folder name
+                        const folderName = story.folderPath.split('/').pop();
+                        return fetch(`${story.folderPath}/${folderName}.md`);
+                    }
+                    return response;
+                })
+                .then(response => response.text())
+                .then(markdownContent => {
+                    // Simple parsing of markdown to HTML
+                    const contentHtml = parseStoryMarkdown(markdownContent, story);
+                    storyContentElement.innerHTML = contentHtml;
+                })
+                .catch(error => {
+                    console.error('Error loading story content:', error);
+                    storyContentElement.innerHTML = '<p class="error">Failed to load story content. Make sure you are running the site with a local server (not just opening the files directly).</p>';
+                });
+        }
+
+        // Function to parse markdown to HTML with image handling
+        function parseStoryMarkdown(markdown, story) {
+            // Split the content into sections based on numerical markers (01, 02, etc.)
+            const sections = markdown.split(/\n\d{2}\n/).slice(1); // Skip first part (title)
+            
+            let html = '';
+            
+            // Process each section
+            sections.forEach((section, index) => {
+                const sectionNumber = (index + 1).toString().padStart(2, '0');
+                
+                // Add section header
+                html += `<div class="story-section" id="section-${sectionNumber}">`;
+                
+                // In our example story structure, we need to handle different image formats
+                // For stories/3/001, we know the specific image pattern
+                if (story.folderPath === 'stories/3/001') {
+                    // Check specific patterns for this story
+                    if (['03', '04', '05', '06', '08'].includes(sectionNumber)) {
+                        // These sections have A and B images
+                        html += `<div class="story-image">
+                            <img src="${story.folderPath}/${sectionNumber}A.png" alt="Page ${sectionNumber}A">
+                        </div>
+                        <div class="story-image">
+                            <img src="${story.folderPath}/${sectionNumber}B.png" alt="Page ${sectionNumber}B">
+                        </div>`;
+                    } else {
+                        // Regular image
+                        html += `<div class="story-image">
+                            <img src="${story.folderPath}/${sectionNumber}.png" alt="Page ${sectionNumber}">
+                        </div>`;
+                    }
+                } else {
+                    // For other stories, fallback to the regular pattern
+                    html += `<div class="story-image">
+                        <img src="${story.folderPath}/${sectionNumber}.png" alt="Page ${sectionNumber}">
+                    </div>`;
+                }
+                
+                // Add the text content
+                html += `<div class="story-paragraph">${section.trim().replace(/\n/g, '<br>')}</div>`;
+                
+                html += `</div>`;
+            });
+            
+            return html;
+        }
+
+        // We don't need this function anymore since we're handling image patterns specifically
+    </script>
+</body>
+</html>
