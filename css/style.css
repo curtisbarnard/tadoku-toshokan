@@ -76,7 +76,7 @@ nav {
 /* Main content styles */
 main {
     padding: 1rem;
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -182,20 +182,15 @@ main {
 
 .story-paragraph {
     writing-mode: vertical-rl;
-    text-orientation: mixed; /* Better for Japanese mixed with punctuation */
-    height: 400px; /* Approx. height for 20 characters */
-    min-height: 300px;
+    text-orientation: mixed;
+    display: block;
+    max-height: 15em;
     margin: 0 auto;
     padding: 1rem 2rem;
-    overflow-x: auto; /* Allow horizontal scrolling for longer content */
-    line-height: 2;
-    letter-spacing: 0.1em;
+    overflow-x: auto;
     text-align: start;
     font-size: 1.2rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 4px;
     flex: 0 0 auto;
-    width: 90%;
 }
 
 .story-navigation {
