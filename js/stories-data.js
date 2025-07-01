@@ -22,7 +22,9 @@ const STORIES = [
         description: "芥川龍之介による短編小説。蛙たちが自分たちの世界観について議論する寓話。",
         descriptionEn: "A short story by Ryunosuke Akutagawa. A fable about frogs discussing their worldview.",
         pageCount: 14,
-        publishDate: "1927"
+        publishDate: "1927",
+        licenseLink: "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+        sourceLink: "https://tadoku.org/japanese/book/43312"
     }
     // Add more stories here as they are added to the collection
 ];

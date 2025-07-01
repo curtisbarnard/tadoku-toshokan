@@ -21,8 +21,6 @@ tadoku-toshokan/
 ├── js/
 │   ├── stories-data.js         # Data file containing story metadata
 │   └── main.js                 # Main JavaScript functionality
-├── template/
-│   └── story-template.html     # HTML template for story pages
 └── stories/                    # Directory containing all stories
     ├── 1/                      # Level 1 stories
     ├── 2/                      # Level 2 stories
