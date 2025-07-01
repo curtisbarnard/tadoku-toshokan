@@ -193,6 +193,48 @@ main {
     flex: 0 0 auto;
 }
 
+.story-about {
+    margin: 4rem 0 3rem;
+    padding: 2rem;
+    background-color: #f5f5f5;
+    border-left: 4px solid #4a89dc;
+}
+
+.story-about h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.about-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    writing-mode: horizontal-tb; /* Override vertical text for the about section */
+    text-orientation: mixed;
+    width: 100%;
+}
+
+.story-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #666;
+    writing-mode: horizontal-tb; /* Ensure horizontal text for footer */
+    text-orientation: mixed;
+    width: 100%;
+}
+
+.story-footer p {
+    margin-bottom: 0.5rem;
+}
+
+.story-footer a {
+    color: #4a89dc;
+    text-decoration: underline;
+}
+
 .story-navigation {
     display: flex;
     justify-content: space-between;

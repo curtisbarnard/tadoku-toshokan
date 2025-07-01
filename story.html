@@ -107,12 +107,17 @@
 
         // Function to parse markdown to HTML with image handling
         function parseStoryMarkdown(markdown, story) {
-            // Split the content into sections based on numerical markers (01, 02, etc.)
-            const sections = markdown.split(/\n\d{2}\n/).slice(1); // Skip first part (title)
+            // First check if there's an About section
+            const parts = markdown.split(/\nABOUT\n/);
+            const mainContent = parts[0];
+            const aboutContent = parts.length > 1 ? parts[1] : null;
+            
+            // Split the main content into sections based on numerical markers (01, 02, etc.)
+            const sections = mainContent.split(/\n\d{2}\n/).slice(1); // Skip first part (title)
             
             let html = '';
             
-            // Process each section
+            // Process each regular section
             sections.forEach((section, index) => {
                 const sectionNumber = (index + 1).toString().padStart(2, '0');
                 
@@ -149,6 +154,29 @@
                 
                 html += `</div>`;
             });
+            
+            // Add About section if it exists
+            if (aboutContent) {
+                html += `<div class="story-about">
+                    <h2>About</h2>
+                    <div class="about-content">${aboutContent.trim().replace(/\n/g, '<br>')}</div>
+                </div>`;
+            }
+            
+            // Add license and source information
+            if (story.licenseLink || story.sourceLink) {
+                html += `<div class="story-footer">`;
+                
+                if (story.sourceLink) {
+                    html += `<p>出典: <a href="${story.sourceLink}" target="_blank">${story.sourceLink}</a></p>`;
+                }
+                
+                if (story.licenseLink) {
+                    html += `<p>ライセンス: <a href="${story.licenseLink}" target="_blank">${story.licenseLink}</a></p>`;
+                }
+                
+                html += `</div>`;
+            }
             
             return html;
         }
