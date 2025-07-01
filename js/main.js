@@ -84,25 +84,8 @@ function loadStory(storyId) {
         return;
     }
     
-    // Load the story content from template.html
-    fetch('template/story-template.html')
-        .then(response => response.text())
-        .then(template => {
-            // Replace placeholders with actual story data
-            template = template.replace('{{TITLE}}', story.title);
-            template = template.replace('{{TITLE_EN}}', story.titleEn ? ` (${story.titleEn})` : '');
-            template = template.replace('{{AUTHOR}}', story.author);
-            template = template.replace('{{AUTHOR_EN}}', story.authorEn ? ` (${story.authorEn})` : '');
-            
-            document.body.innerHTML = template;
-            
-            // Now load the story content
-            loadStoryContent(story);
-        })
-        .catch(error => {
-            console.error('Error loading story template:', error);
-            document.body.innerHTML = '<div class="error-message"><h1>Error</h1><p>Could not load the story template.</p><a href="index.html">Back to Home</a></div>';
-        });
+    // Redirect to story.html with the story ID
+    window.location.href = `story.html?id=${storyId}`;
 }
 
 // Function to load story content
@@ -154,25 +137,28 @@ function parseStoryMarkdown(markdown, story) {
         html += `<div class="story-section" id="section-${sectionNumber}">`;
         
         // Add the image for this section
-        // Determine image filename format (could be 01.png, 01A.png, etc.)
-        const imagePath = `${story.folderPath}/${sectionNumber}.png`;
-        const imageAPath = `${story.folderPath}/${sectionNumber}A.png`;
-        const imageBPath = `${story.folderPath}/${sectionNumber}B.png`;
-        
-        // Check if specific image exists, otherwise use regular format
-        if (fileExists(imageAPath)) {
-            html += `<div class="story-image">
-                <img src="${imageAPath}" alt="Page ${sectionNumber}A">
-            </div>`;
-            
-            if (fileExists(imageBPath)) {
+        // For our example story structure, we need to handle different image formats
+        // For stories/3/001, we know the specific image pattern
+        if (story.folderPath === 'stories/3/001') {
+            // Check specific patterns for this story
+            if (['03', '04', '05', '06', '08'].includes(sectionNumber)) {
+                // These sections have A and B images
                 html += `<div class="story-image">
-                    <img src="${imageBPath}" alt="Page ${sectionNumber}B">
+                    <img src="${story.folderPath}/${sectionNumber}A.png" alt="Page ${sectionNumber}A">
+                </div>
+                <div class="story-image">
+                    <img src="${story.folderPath}/${sectionNumber}B.png" alt="Page ${sectionNumber}B">
+                </div>`;
+            } else {
+                // Regular image
+                html += `<div class="story-image">
+                    <img src="${story.folderPath}/${sectionNumber}.png" alt="Page ${sectionNumber}">
                 </div>`;
             }
         } else {
+            // For other stories, fallback to the regular pattern
             html += `<div class="story-image">
-                <img src="${imagePath}" alt="Page ${sectionNumber}">
+                <img src="${story.folderPath}/${sectionNumber}.png" alt="Page ${sectionNumber}">
             </div>`;
         }
         
@@ -183,13 +169,4 @@ function parseStoryMarkdown(markdown, story) {
     });
     
     return html;
-}
-
-// Helper function to check if a file exists (simplified version for client-side)
-// Note: This is a simplified version that doesn't actually check if the file exists
-// In a real implementation, you might want to use a server-side check or pre-build a manifest
-function fileExists(filePath) {
-    // This is a simplification. In reality, we can't reliably check if a file exists client-side
-    // We're assuming the file structure follows the expected pattern
-    return true;
 }
